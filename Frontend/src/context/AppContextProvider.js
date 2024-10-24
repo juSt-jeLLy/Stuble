@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useUser from '../hooks/useUser'; 
+import useUser from "../hooks/useUser";
 import AppContext from "./AppContext";
 
 export const AppContextProvider = (props) => {
@@ -9,7 +9,7 @@ export const AppContextProvider = (props) => {
     const [loggedinF, setLoggedinF] = useState(localStorage.getItem("loginF"));
     const [loggedinA, setLoggedinA] = useState(localStorage.getItem("loginA"));
     const [EndObject, setEndObject] = useState("");
- 
+
     // useEffect(() => {
     //     console.log("Logged in states:", loggedinA, loggedinC, loggedinF);
     // }, [alert, loggedinA, loggedinC, loggedinF]);
@@ -42,20 +42,22 @@ export const AppContextProvider = (props) => {
     };
 
     return (
-        <AppContext.Provider value={{
-            showAlert,
-            alert,
-            user,
-            LoginC,
-            loggedinC,
-            LoginA,
-            loggedinA,
-            LoginF,
-            loggedinF,
-            setUser,
-            EndObject,
-            FullfillRequest
-        }}>
+        <AppContext.Provider
+            value={{
+                showAlert,
+                alert,
+                user,
+                LoginC,
+                loggedinC,
+                LoginA,
+                loggedinA,
+                LoginF,
+                loggedinF,
+                setUser,
+                EndObject,
+                FullfillRequest,
+            }}
+        >
             {props.children}
         </AppContext.Provider>
     );

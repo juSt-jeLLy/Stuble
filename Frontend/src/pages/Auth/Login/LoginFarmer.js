@@ -14,7 +14,8 @@ const LoginFarmer = () => {
 
     const userlogin = async (e) => {
         e.preventDefault();
-        const response = await axios.post("http://localhost:8000/LoginFarmer", {
+        const server = process.env.REACT_APP_SERVER;
+        const response = await axios.post(`${server}/LoginFarmer1`, {
             email: user1.email,
             password: user1.password,
         });

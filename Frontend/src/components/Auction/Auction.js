@@ -3,7 +3,8 @@ import io from 'socket.io-client';
 import AuctionList from './AuctionList.js';
 import "../../styles/Auction.css"
 
-const ENDPOINT = 'http://localhost:8001';
+const auctionserver = process.env.REACT_APP_AUCTIONSERVER;
+const ENDPOINT = `${auctionserver}`;
 const socket = io(ENDPOINT, {
     transports: ['websocket', 'polling'],
 });

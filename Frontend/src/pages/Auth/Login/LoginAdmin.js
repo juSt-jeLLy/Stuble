@@ -14,7 +14,8 @@ const LoginAdmin = () => {
 
     const Adminlogin = async (e) => {
         e.preventDefault();
-        const response = await axios.post('http://localhost:8000/LoginAdmin', {
+        const server = process.env.REACT_APP_SERVER;
+        const response = await axios.post(`${server}/LoginAdmin`, {
             email: Admin.email,
             password: Admin.password
         }) 

@@ -15,7 +15,8 @@ const SignUpFarmer = () => {
       const usersignup = async (e) => {
             e.preventDefault();
             if (user.password === user.cpassword) {
-                  const data = await axios.post('http://localhost:8000/SignUpFarmer', {
+                const server = process.env.REACT_APP_SERVER;
+                  const data = await axios.post(`${server}/SignUpFarmer`, {
                         name: user.name,
                         mobileno: user.mobileno,
                         email: user.email,

@@ -16,10 +16,11 @@ const LoginCompany = () => {
 
     const Companylogin = async (e) => {
         e.preventDefault();
-        const response = await axios.post("http://localhost:8000/LoginCompany", {
+        const server = process.env.REACT_APP_SERVER;
+        const response = await axios.post(`${server}/LoginCompany`, {
             email: Company.email,
             password: Company.password,
-        });
+        }); 
         if (response.data.success) {
             showAlert(response.data.message, "success");
             //localStorage.setItem("loginC", "true");

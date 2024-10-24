@@ -26,6 +26,7 @@ import Roomform from './pages/Profile/Admin/Room/Roomform';
 import SuccessPage from './pages/Profile/Farmer/Service/SuccessPage';
 import Alert from './components/shared/Alert';
 import AppContextProvider from './context/AppContextProvider';
+import PrivateRoute from './components/PrivateRoute';
 
 const MyRoutes = () => {
     return (
@@ -47,26 +48,23 @@ const MyRoutes = () => {
                         <Route path='/SignUpCompany' element={<SignUpCompany />} />
                         <Route path='/SignUpAdmin' element={<SignUpAdmin />} />
 
-                        <Route path='/CompanyHome' element={<CompanyHome />} />
-                        <Route path='/FarmerHome' element={<FarmerHome />} />
+                        <Route path='/CompanyHome' element={<PrivateRoute component={CompanyHome} role="company" />} />
+                        <Route path='/FarmerHome' element={<PrivateRoute component={FarmerHome} role="farmer" />} />
+                        <Route path='/AdminHome' element={<PrivateRoute component={AdminHome} role="admin" />} />
 
+                        <Route path='/CompleteRequest' element={<PrivateRoute component={CompleteRequest} role="admin" />} />
+                        <Route path='/ClearReqForm' element={<PrivateRoute component={ClearReqForm} role="admin" />} />
 
-                        <Route path='/AdminHome' element={<AdminHome />} />
+                        <Route path='/ShowAuction' element={<PrivateRoute component={ShowAuction} role="admin" />} />
 
+                        <Route path='/Auction' element={<PrivateRoute component={Auction} role="company" />} />
+                        <Route path='/AuctionList' element={<PrivateRoute component={AuctionList} role="admin" />} />
+                        <Route path='/CreateRoom' element={<PrivateRoute component={Roomform} role="admin" />} />
 
-                        <Route path='/CompleteRequest' element={<CompleteRequest />} />
-                        <Route path='/ClearReqForm' element={<ClearReqForm />} />
+                        <Route path='/Profile' element={<PrivateRoute component={Profile} role="farmer" />} />
 
-                        <Route path='/ShowAuction' element={<ShowAuction />} />
-
-                        <Route path='/Auction' element={<Auction />} />
-                        <Route path='/AuctionList' element={<AuctionList />} />
-                        <Route path='/CreateRoom' element={<Roomform />} />
-
-                        <Route path='/Profile' element={<Profile />} />
-
-                        <Route path='/Service' element={<Service />} />
-                        <Route path='/SuccessPage' element={<SuccessPage />} />
+                        <Route path='/Service' element={<PrivateRoute component={Service} role="farmer" />} />
+                        <Route path='/SuccessPage' element={<PrivateRoute component={SuccessPage} role="farmer" />} />
 
                         <Route path='/Forget' element={<Forget />} />
 
@@ -74,7 +72,6 @@ const MyRoutes = () => {
                     </Routes>
                 </AppContextProvider>
             </Router >
-
         </>
     )
 }

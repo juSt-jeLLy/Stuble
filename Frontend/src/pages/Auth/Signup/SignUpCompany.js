@@ -16,7 +16,8 @@ const SignUpCompany = () => {
       const Companysignup = async (e) => {
             e.preventDefault();
             if (company.password === company.cpassword) {
-                  const data = await axios.post('http://localhost:8000/SignUpCompany', {
+                const server = process.env.REACT_APP_SERVER;
+                  const data = await axios.post(`${server}/SignUpCompany`, {
                         name: company.name,
                         mobileno: company.mobileno,
                         email: company.email,

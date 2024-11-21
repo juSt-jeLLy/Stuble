@@ -22,7 +22,7 @@ const LoginAdmin = () => {
         if (response.data.success) {
             showAlert(response.data.message, 'success');
             console.log(response.data)
-            setUser(response.data.name);
+            setUser(response.data.data.name);
             
             // localStorage.setItem("userLogin", JSON.stringify(data.data.data));
             LoginA('true');

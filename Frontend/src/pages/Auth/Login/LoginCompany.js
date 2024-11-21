@@ -15,6 +15,7 @@ const LoginCompany = () => {
     });
 
     const Companylogin = async (e) => {
+        console.log("hello world")
         e.preventDefault();
         const server = process.env.REACT_APP_SERVER;
         const response = await axios.post(`${server}/LoginCompany`, {
@@ -23,8 +24,9 @@ const LoginCompany = () => {
         }); 
         if (response.data.success) {
             showAlert(response.data.message, "success");
+            console.log(response.data)
             //localStorage.setItem("loginC", "true");
-            setUser(response.data.name);
+            setUser(response.data.data.name);
             LoginC('true');
             //localStorage.setItem("userLogin", JSON.stringify(response.data.data));
             navigate("/CompanyHome");

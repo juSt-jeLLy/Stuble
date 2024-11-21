@@ -24,7 +24,7 @@ const LoginCompany = () => {
         if (response.data.success) {
             showAlert(response.data.message, "success");
             //localStorage.setItem("loginC", "true");
-            setUser(response.data.data.name);
+            setUser(response.data.name);
             LoginC('true');
             //localStorage.setItem("userLogin", JSON.stringify(response.data.data));
             navigate("/CompanyHome");

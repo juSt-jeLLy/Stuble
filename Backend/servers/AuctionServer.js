@@ -50,8 +50,8 @@ io.on('connection', (socket) => {
                 }, timeLeft);
             }
 
-            let startingBid = await AuctionModel.findOne({ Room: data.Code });
-            socket.emit("starting_bid", startingBid ? startingBid.Bid : 0);
+            // let startingBid = await AuctionModel.findOne({ Room: data.Code });
+            // socket.emit("starting_bid", startingBid ? startingBid.Bid : 0);
 
             let latestBid = await AuctionModel.findOne({ Room: data.Code }).sort({ _id: -1 });
             if (latestBid) {

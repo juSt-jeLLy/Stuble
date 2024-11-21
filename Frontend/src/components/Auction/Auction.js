@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import io from 'socket.io-client';
 import AuctionList from './AuctionList.js';
 import "../../styles/Auction.css"
+import AppContext from '../../context/AppContext';
 
 const auctionserver = process.env.REACT_APP_AUCTIONSERVER;
 const ENDPOINT = `${auctionserver}`;
@@ -9,13 +10,16 @@ const socket = io(ENDPOINT, {
     transports: ['websocket', 'polling'],
 });
 
+
+
 function Auction() {
+    const { user, setUser } = useContext(AppContext);
     const [price, setPrice] = useState(0);
     const [amount, setAmount] = useState('');
     const [Code, setCode] = useState('');
     const [bids, setBids] = useState([]);
     const [Start, setStart] = useState(0);
-    const [user, setUser] = useState('');
+    //const [user, setUser] = useState('');
     const [Cuser, setCuser] = useState('');
     const [sDate, setSDate] = useState('');
     const [cDate, setCDate] = useState(new Date());
@@ -28,11 +32,16 @@ function Auction() {
             alert("The auction has ended. No more bids can be placed.");
             return;
         }
+        if (!amount || amount <= 0) {
+            alert("Please enter a valid bid amount");
+            return;
+        }
         if (Hig < amount) {
             setPrice(amount);
             socket.emit('send_bid', { bid: amount, Code, user });
         } else {
-            alert("Please enter a valid bid");
+            alert("Bid must be higher than current highest bid");
+            return;
         }
         setAmount('');
     };
@@ -43,9 +52,9 @@ function Auction() {
     };
 
     useEffect(() => {
-        const user1 = localStorage.getItem('user');
-        setUser(user1);
-
+        // const user1 = localStorage.getItem('user');
+        // setUser(user1);
+        
         socket.on("auth_error", (data) => {
             alert(data.msg);
         });
@@ -54,11 +63,12 @@ function Auction() {
             alert("Cannot find room with this id");
         });
 
-        socket.on("starting_bid", (data) => {
-            setStart(data);
-        });
+        // socket.on("starting_bid", (data) => {
+            
+        // });
 
         socket.on("startDetails", (data) => {
+            setStart(data.StartBid);
             setSDate(new Date(data.endDate).toLocaleString());
         });
 

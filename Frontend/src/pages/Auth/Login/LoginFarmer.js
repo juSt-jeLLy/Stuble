@@ -15,13 +15,13 @@ const LoginFarmer = () => {
     const userlogin = async (e) => {
         e.preventDefault();
         const server = process.env.REACT_APP_SERVER;
-        const response = await axios.post(`${server}/LoginFarmer1`, {
+        const response = await axios.post(`${server}/LoginFarmer`, {
             email: user1.email,
             password: user1.password,
         });
         if (response.data.success) {
             showAlert(response.data.message, "success");
-            setUser(response.data.data);
+            setUser(response.data.data.name);
             //localStorage.setItem("userLogin", JSON.stringify(response.data.data));
             LoginF('true');
             navigate("/FarmerHome");

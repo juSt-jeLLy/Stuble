@@ -21,7 +21,8 @@ const LoginAdmin = () => {
         }) 
         if (response.data.success) {
             showAlert(response.data.message, 'success');
-            setUser(response.data.data);
+            setUser(response.data.data.name);
+            
             // localStorage.setItem("userLogin", JSON.stringify(data.data.data));
             LoginA('true');
             navigate('/AdminHome')

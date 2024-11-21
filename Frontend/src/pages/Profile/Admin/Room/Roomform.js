@@ -19,7 +19,6 @@ const Roomform = () => {
             StartBid: Room.StartBid,
             startDate: Room.startDate,
             endDate: Room.endDate,
-            StartBid: "2000"
         })
         if (data.data.success) {
             showAlert(data.data.msg, 'success');

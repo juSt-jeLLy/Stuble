@@ -21,7 +21,7 @@ export const AppContextProvider = (props) => {
         localStorage.setItem("loginC", state);
         setLoggedinC(state);
     };
-
+ 
     const LoginF = (state) => {
         localStorage.setItem("loginF", state);
         setLoggedinF(state);

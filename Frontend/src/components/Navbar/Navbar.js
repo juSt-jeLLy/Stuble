@@ -71,7 +71,7 @@ function Navbar() {
                         {
                             user ?
                                 <>
-                                    <button role="button" className="button-name" onClick={ProfileFun}>{user.name}</button>
+                                    <button role="button" className="button-name" onClick={ProfileFun}>{user}</button>
                                     <button role="button" className="button-name" onClick={Logout}>LogOut</button>
                                 </>
                                 :

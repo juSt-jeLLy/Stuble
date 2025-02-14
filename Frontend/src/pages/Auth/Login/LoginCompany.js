@@ -5,98 +5,72 @@ import { useNavigate } from "react-router-dom";
 import AppContext from "../../../context/AppContext";
 
 const LoginCompany = () => {
-    const { showAlert, LoginC, setUser } = useContext(AppContext);
+  const { showAlert, LoginC, setUser } = useContext(AppContext);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const [Company, setCompany] = useState({
+    email: "",
+    password: "",
+  });
 
-    const [Company, setCompany] = useState({
-        email: "",
-        password: "",
-    });
+  const Companylogin = async (e) => {
+    e.preventDefault();
+    const server = process.env.REACT_APP_SERVER;
+    try {
+      const response = await axios.post(`${server}/LoginCompany`, {
+        email: Company.email,
+        password: Company.password,
+      });
+      if (response.data.success) {
+        showAlert(response.data.message, "success");
+        setUser(response.data.data.name);
+        LoginC("true");
+        navigate("/CompanyHome");
+      } else {
+        showAlert(response.data.message, "danger");
+      }
+    } catch (error) {
+      showAlert('Something went wrong!', 'danger');
+    }
+  };
 
-    const Companylogin = async (e) => {
-        console.log("hello world")
-        e.preventDefault();
-        const server = process.env.REACT_APP_SERVER;
-        const response = await axios.post(`${server}/LoginCompany`, {
-            email: Company.email,
-            password: Company.password,
-        }); 
-        if (response.data.success) {
-            showAlert(response.data.message, "success");
-            console.log(response.data)
-            //localStorage.setItem("loginC", "true");
-            setUser(response.data.data.name);
-            LoginC('true');
-            //localStorage.setItem("userLogin", JSON.stringify(response.data.data));
-            navigate("/CompanyHome");
-        } else {
-            showAlert(response.data.message, "danger");
-        }
-    };
-    // Regular expression for email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setCompany({ ...Company, [name]: value });
+  };
 
-    // Regular expression for password validation (at least 8 characters long)
-    const passwordRegex = /^.{8,}$/;
-    let name, value;
-    const handleInput = (e) => {
-        name = e.target.name;
-        value = e.target.value;
-        setCompany({ ...Company, [name]: value });
-        e.preventDefault();
+  return (
+    <div className="login-container">
+      <h1>Login For Buyer</h1>
+      <form onSubmit={Companylogin} method="post">
+        <label>Email</label>
+        <input
+          type="text"
+          required
+          name="email"
+          value={Company.email}
+          onChange={handleInput}
+        />
 
-        if (name === "email" && !emailRegex.test(value)) {
-            showAlert("Please enter a valid email address", "danger");
-        }
+        <label>Password</label>
+        <input
+          type="password"
+          required
+          name="password"
+          value={Company.password}
+          onChange={handleInput}
+        />
 
-        // Password validation
-        if (name === "password" && !passwordRegex.test(value)) {
-            showAlert("Password must be at least 8 characters long", "danger");
-        }
+        <a href="/Forget" style={{ fontSize: '0.9rem' }}>Forget Password?</a>
 
-        setCompany({ ...Company, [name]: value });
-        e.preventDefault();
-    };
+        <input type="submit" value="Login" className="login-submit" />
 
-    return (
-        <>
-            {/* <Navbar/> */}
-            <div className="centerL">
-                <h1>Login For Buyer</h1>
-                <form onSubmit={Companylogin} method="post">
-                    <div className="txt_field">
-                        <input
-                            type="text"
-                            required
-                            name="email"
-                            value={Company.email}
-                            onChange={handleInput}
-                        />
-                        <label>Email</label>
-                    </div>
-                    <div className="txt_field">
-                        <input
-                            type="password"
-                            required
-                            name="password"
-                            value={Company.password}
-                            onChange={handleInput}
-                        />
-                        <label>Password</label>
-                    </div>
-                    <div className="pass">
-                        <a href="Forget">Forget Password?</a>
-                    </div>
-
-                    <input type="submit" value="Login" className="Login" />
-                    <div className="signup_link">
-                        Not a member? <a href="SignUpCompany">Signup</a>
-                    </div>
-                </form>
-            </div>
-        </>
-    );
+        <div style={{ marginTop: '1rem' }}>
+          Not a member? <a href="/SignUpCompany">Signup</a>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default LoginCompany;

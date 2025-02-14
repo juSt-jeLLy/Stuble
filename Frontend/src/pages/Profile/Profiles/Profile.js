@@ -3,135 +3,78 @@ import '../../../styles/Profile.css';
 import AppContext from '../../../context/AppContext';
 
 const Profile = () => {
-      const { user, setUser } = useContext(AppContext);
-      // const [user1, setUser1] = useState({});
-      const [farmerDetails, setFarmerDetails] = useState({
-            Address: '',
+  const { user, setUser } = useContext(AppContext);
+  const [farmerDetails, setFarmerDetails] = useState({
+    Address: '',
+    CropsType: '',
+    LandSize: ''
+  });
 
-            // location: '',
-            CropsType: '',
-            LandSize: '',
-      });
-      // const UpdateProfile = async (e) => {
-      //   e.preventDefault();
-      //   if (company.password === company.cpassword) {
-      //     const data = await axios.post('http://localhost:5000/SignUpCompany', {
-      //       name: company.name,
-      //       mobileno: company.mobileno,
-      //       email: company.email,
-      //       password: company.password,
-      //     })
-      //     // console.log(data.data);
-      //     if (data.data.success) {
-      //       showAlert(data.data.msg,'success');
-      //       navigate('/LoginCompany')
-      //     } else {
-      //       showAlert(data.data.msg,'danger');
-      //     }
-      //   }
-      //   else{
-      //     alert("Password Not Matching");
-      //   }
+  const handleChange = (event) => {
+    setFarmerDetails({
+      ...farmerDetails,
+      [event.target.name]: event.target.value
+    });
+  };
 
-      // }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(farmerDetails);
+    // Example: you can handle saving these details to the server
+  };
 
+  useEffect(() => {
+    let u = JSON.parse(localStorage.getItem("userLogin"));
+    u ? setUser(u) : setUser(null);
+  }, [setUser]);
 
-      const handleChange = (event) => {
-            setFarmerDetails({
-                  ...farmerDetails,
-                  [event.target.name]: event.target.value
-            });
-      };
+  return (
+    <div className="profile-container">
+      <div className="profile-header">
+        <h1>Account Profile</h1>
+      </div>
+      <div className="profile-info">
+        <p><strong>Name:</strong> {user ? user.name : 'N/A'}</p>
+        <p><strong>Phone:</strong> {user ? user.mobileno : 'N/A'}</p>
+        <p><strong>Email:</strong> {user ? user.email : 'N/A'}</p>
+      </div>
 
-      const handleSubmit = (event) => {
-            event.preventDefault();
-            console.log(farmerDetails);
-      };
-      useEffect(() => {
-            let u = JSON.parse(localStorage.getItem("userLogin"));
-            u ? setUser(u) : setUser(null)
-      }, [])
+      <form onSubmit={handleSubmit}>
+        <label>Address</label>
+        <input
+          type="text"
+          name="Address"
+          value={farmerDetails.Address}
+          onChange={handleChange}
+        />
 
-      return (
-            <div className="container12 jb">
-                  <div className="card12">
-                        <div className="card-header12">
-                              <label>Account :</label>
-                              <h1>{user.name}</h1>
-                        </div>
-                        <div className="card-body12">
-                              <div className="form-group12">
-                                    <label>Phone:</label>
-                                    <p>{user.mobileno}</p>
-                              </div>
-                              <div className="form-group12">
-                                    <label>Email:</label>
-                                    <p>{user.email}</p>
-                              </div>
+        <label>Types of crops</label>
+        <input
+          type="text"
+          name="CropsType"
+          value={farmerDetails.CropsType}
+          onChange={handleChange}
+        />
 
-                              {/* <div className="form-group">
-                <label>Address:</label>
-                <p>{user.address}</p>
-              </div>
-              <div className="form-group">
-                <label>Company:</label>
-                <p>{user.company}</p> */}
-                              {/* </div> */}
-                              <div>
-                                    <form onSubmit={handleSubmit}>
-                                          <label>
-                                                Address :
-                                                <input className='InProfile'
-                                                      type="text"
-                                                      name="Address"
-                                                      value={farmerDetails.Address}
-                                                      onChange={handleChange}
-                                                />
-                                          </label>
-                                          <br />
-                                          <label>
-                                                Types  of crops:
-                                                <input className='InProfile'
-                                                      type="text"
-                                                      name="CropsType"
-                                                      value={farmerDetails.CropsType}
-                                                      onChange={handleChange}
-                                                />
-                                          </label>
-                                          <br />
-                                          <label>
-                                                Land Size in (Acre):
-                                                <input className='InProfile'
-                                                      type="text"
-                                                      name="LandSize"
-                                                      value={farmerDetails.LandSize}
-                                                      onChange={handleChange}
-                                                />
-                                          </label>
-                                          <br />
-                                          {/* <label>
-          :
-          <input  className='InProfile'
-            type="text"
-            name=""
-            value={farmerDetails.cropType}
-            onChange={handleChange}
-          />
-        </label>
-        <br /> */}
-                                          <button type="submit" className='UpdateProfile'>Update Profile</button>
-                                    </form>
-                                    <h2>Farmer Details:</h2>
-                                    <p>Address: {farmerDetails.Address}</p>
-                                    <p>Types of Crops Planted : {farmerDetails.CropsType}</p>
-                                    <p>Land Size (in Acre): {farmerDetails.LandSize}</p>
-                                    {/* <p>Crop Type: {farmerDetails.cropType}</p> */}
-                              </div>
+        <label>Land Size (in Acre)</label>
+        <input
+          type="text"
+          name="LandSize"
+          value={farmerDetails.LandSize}
+          onChange={handleChange}
+        />
 
-                        </div>
-                  </div>
-            </div>
-      );
+        <button type="submit" className="update-profile-btn">Update Profile</button>
+      </form>
+
+      <div style={{ marginTop: '2rem' }}>
+        <h3>Preview:</h3>
+        <p>Address: {farmerDetails.Address}</p>
+        <p>Types of Crops: {farmerDetails.CropsType}</p>
+        <p>Land Size: {farmerDetails.LandSize}</p>
+      </div>
+    </div>
+  );
 };
 
 export default Profile;

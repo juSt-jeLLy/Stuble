@@ -1,186 +1,172 @@
-import React, { useContext, useEffect, useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import React, { useContext, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../../../../styles/Service.css';
 import AppContext from '../../../../context/AppContext';
+
 const Service = () => {
-    const { showAlert } = useContext(AppContext);
-    const navigate = useNavigate()
+  const { showAlert } = useContext(AppContext);
+  const navigate = useNavigate();
 
-    const [service, setService] = useState({
-        email: "", mobileno: "", acre: "", ptype: "", date1: "", du1: "", du2: "", type: [], mtype: ""
-    })
+  const [service, setService] = useState({
+    email: "",
+    mobileno: "",
+    acre: "",
+    ptype: "",
+    date1: "",
+    du1: "",
+    du2: "",
+    type: "",
+    mtype: []
+  });
 
-    useEffect(() => {
-        console.log(service);
-    }, [service]);
-    const Servicefun = async (e) => {
-        e.preventDefault();
-
-        const data1 = document.getElementsByName("radio1");
-        let datatype = null;
-        for (let i = 0; i < data1.length; i++) {
-            if (data1[i].checked) {
-                datatype = data1[i].value;
-                console.log(data1[i].value);
-            }
-        }
-        const newValue = document.getElementsByClassName('myCheckBox');
-        let arr = [];
-        for (let i = 0; i < newValue.length; i++) {
-            if (newValue[i].checked) {
-                // arr = [...arr,newValue[i].value];
-                arr = [...arr, newValue[i].value];
-                console.log(newValue[i].value);
-            }
-        }
-        setService({ email: service.email, mobileno: service.mobileno, acre: service.acre, ptype: service.ptype, date1: service.date1, du1: service.du1, du2: service.du2, type: datatype, mtype: JSON.stringify(arr) });
-        const server = process.env.REACT_APP_SERVER;
-        const data = await axios.post(`${server}/Service`, {
-            email: service.email,
-            mobileno: service.mobileno,
-            acre: service.acre,
-            ptype: service.ptype,
-            date1: service.date1,
-            du1: service.du1,
-            du2: service.du2,
-            type: service.type,
-            mtype: service.mtype,
-
-        })
-        if (data.data.success) {
-            showAlert(data.data.msg, 'success');
-            navigate('/FarmerHome')
-        } else {
-            showAlert(data.data.msg, 'danger');
-        }
-
+  const handleCheckbox = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setService((prev) => ({ ...prev, mtype: [...prev.mtype, value] }));
+    } else {
+      setService((prev) => ({ ...prev, mtype: prev.mtype.filter((item) => item !== value) }));
     }
+  };
 
-
-    let name, value;
-    const handleInput = (e) => {
-        name = e.target.name;
-        value = e.target.value;
-        setService({ ...service, [name]: value })
-        e.preventDefault();
+  const Servicefun = async (e) => {
+    e.preventDefault();
+    const server = process.env.REACT_APP_SERVER;
+    try {
+      const { data } = await axios.post(`${server}/Service`, {
+        ...service,
+        mtype: JSON.stringify(service.mtype)
+      });
+      if (data.success) {
+        showAlert(data.msg, 'success');
+        navigate('/FarmerHome');
+      } else {
+        showAlert(data.msg, 'danger');
+      }
+    } catch (error) {
+      showAlert('Something went wrong!', 'danger');
     }
+  };
 
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setService({ ...service, [name]: value });
+  };
 
-    return (
-        <>
-            <div id='JB' className="center1">
-                <h1>Service Form
-                </h1>
-                <form onSubmit={Servicefun} method="POST" id="myForm">
-                    <div className="txt_field">
-                        <input type="text" required name='email' value={service.email} onChange={handleInput} />
+  return (
+    <div className="service-wrapper">
+      <h1>Service Form</h1>
+      <form onSubmit={Servicefun} className="service-form">
+        <label>Email</label>
+        <input
+          type="text"
+          name="email"
+          value={service.email}
+          onChange={handleInput}
+          required
+        />
 
-                        <label>Email</label>
-                    </div>
-                    <div className="txt_field">
-                        <input type="text" required name='mobileno' value={service.mobileno} onChange={handleInput} />
+        <label>Phone no.</label>
+        <input
+          type="text"
+          name="mobileno"
+          value={service.mobileno}
+          onChange={handleInput}
+          required
+        />
 
-                        <label>Phone no.</label>
-                    </div>
-                    <div className="txt_field">
-                        <input type="text" name="acre" required value={service.acre} onChange={handleInput} />
-                        <span></span>
-                        <label>How much land you have?<small>(in acers*)</small></label>
-                    </div>
-                    <div className="txt_field">
-                        <input type="text" name="ptype" required value={service.ptype} onChange={handleInput} />
-                        <span></span>
-                        <label>Which crops are planted in your field?</label>
-                    </div>
-                    <span></span>
-                    <div className="txt_field">
+        <label>How much land you have? (in acres)</label>
+        <input
+          type="text"
+          name="acre"
+          value={service.acre}
+          onChange={handleInput}
+          required
+        />
 
-                        <input type="date" id="Date12" name="date1" value={service.date1} onChange={handleInput} />
-                        <label for="date12">When did you plant that crop?</label>
-                    </div>
-                    <div >
+        <label>Which crops are planted in your field?</label>
+        <input
+          type="text"
+          name="ptype"
+          value={service.ptype}
+          onChange={handleInput}
+          required
+        />
 
-                        <div className="txt_field">
-                            <input type="date" id="Du1" name="du1" value={service.du1} onChange={handleInput} />
-                            <label for="Du1">Approx duration of harvesting.</label>
-                        </div>
+        <label>When did you plant that crop?</label>
+        <input
+          type="date"
+          name="date1"
+          value={service.date1}
+          onChange={handleInput}
+        />
 
-                        <div className="txt_field">
-                            <input type="date" id="Du2" name="du2" value={service.du2} onChange={handleInput} />
-                            <label for="Du2">To</label>
-                        </div>  </div>
+        <label>Approx duration of harvesting (Start)</label>
+        <input
+          type="date"
+          name="du1"
+          value={service.du1}
+          onChange={handleInput}
+        />
 
-                    <div className='jb' >
+        <label>Approx duration of harvesting (End)</label>
+        <input
+          type="date"
+          name="du2"
+          value={service.du2}
+          onChange={handleInput}
+        />
 
-                        <label>What do you want to give ? </label>
-                        <span></span>
-                    </div>
+        <label>What do you want to give?</label>
+        <div>
+          <label>
+            <input
+              type="radio"
+              name="type"
+              value="Only Residue"
+              onChange={(e) => setService({ ...service, type: e.target.value })}
+            />
+            Only Residue
+          </label>
+          <label style={{ marginLeft: '1rem' }}>
+            <input
+              type="radio"
+              name="type"
+              value="Both Residue & Grains"
+              onChange={(e) => setService({ ...service, type: e.target.value })}
+            />
+            Both Residue & Grains
+          </label>
+        </div>
 
-                    <div className="radio-inputs jb1">
-                        <label className="radio">
-                            <input type="radio" name="radio1" value="Only Residue" />
-                            <div className="name" onClick={() => setService({ ...service, mtype: "Only Residue" })}>Only Residue</div>
+        <label>Select Machine(s) you need for harvesting</label>
+        <div className="checkbox-list">
+          <div className="checkbox-item">
+            <input type="checkbox" value="Harvester" onChange={handleCheckbox} />
+            <span>Harvester</span>
+          </div>
+          <div className="checkbox-item">
+            <input type="checkbox" value="Tractor" onChange={handleCheckbox} />
+            <span>Tractor</span>
+          </div>
+          <div className="checkbox-item">
+            <input type="checkbox" value="Soil cultivator" onChange={handleCheckbox} />
+            <span>Soil cultivator</span>
+          </div>
+          <div className="checkbox-item">
+            <input type="checkbox" value="Disc Plough" onChange={handleCheckbox} />
+            <span>Disc Plough</span>
+          </div>
+          <div className="checkbox-item">
+            <input type="checkbox" value="Thresher" onChange={handleCheckbox} />
+            <span>Thresher</span>
+          </div>
+        </div>
 
-                        </label>
-                        <label className="radio">
-                            <input type="radio" name="radio1" value="Both Residue & Grains" />
-                            <div className="name" onClick={() => setService({ ...service, mtype: "Both Residue & Grains" })}>Both Residue & Grains</div>
-                        </label>
-                    </div>
+        <input type="submit" value="Request" className="service-submit" />
+      </form>
+    </div>
+  );
+};
 
-
-                    <div className='jb' >
-
-                        <label for="faq">Select Machine you need for harvesting</label>
-                        <span></span>
-                    </div>
-                    <div >
-                        <div className="jb2">
-                            <label class="conta">
-                                <input type="checkbox" value="Harvester" className='myCheckBox' />
-                                <div class="checkmark" onClick={() => setService({ ...service, type: "Harvester" })}></div>
-                            </label>
-                            <label className='jb3'>Harvester</label>
-                        </div>
-                        <div className="jb2">
-                            <label class="conta">
-                                <input type="checkbox" value="Tractor" className='myCheckBox' />
-                                <div class="checkmark" onClick={() => setService({ ...service, type: "Tractor" })}></div>
-                            </label>
-                            <label className='jb3'>Tractor</label>
-                        </div>
-                        <div className="jb2">
-                            <label class="conta">
-                                <input type="checkbox" value="Soil cultivator" className='myCheckBox' />
-                                <div class="checkmark" onClick={() => setService({ ...service, type: "Soil cultivator" })}></div>
-                            </label>
-                            <label className='jb3'>Soil cultivator</label>
-                        </div>
-                        <div className="jb2">
-                            <label class="conta">
-                                <input type="checkbox" value="Disc Plough" className='myCheckBox' />
-                                <div class="checkmark" onClick={() => setService({ ...service, type: "Disc Plough" })}></div>
-                            </label>
-                            <label className='jb3'>Disc Plough</label>
-                        </div>
-                        <div className="jb2">
-                            <label class="conta">
-                                <input type="checkbox" value="Thresher " className='myCheckBox' />
-                                <div class="checkmark" onClick={() => setService({ ...service, type: "Thresher" })}></div>
-                            </label>
-                            <label className='jb3'>Thresher</label>
-                        </div>
-                    </div>
-                    <div className="cen">
-                        <input type="submit" value="Request" />
-                    </div>
-                </form>
-            </div>
-            <div className="space"></div>
-        </>
-    )
-}
-
-export default Service
-
+export default Service;

@@ -1,91 +1,108 @@
-import React, { useContext, useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import "../../../styles/SignUpStyles.css"
+import React, { useContext, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import "../../../styles/SignUpStyles.css";
 import AppContext from '../../../context/AppContext';
 
 const SignUpCompany = () => {
-      const { showAlert } = useContext(AppContext);
+  const server = process.env.REACT_APP_SERVER;
+  const { showAlert } = useContext(AppContext);
+  const navigate = useNavigate();
 
-      const navigate = useNavigate()
+  const [company, setCompany] = useState({
+    name: "",
+    mobileno: "",
+    email: "",
+    password: "",
+    cpassword: ""
+  });
 
-      const [company, setCompany] = useState({
-            name: "", mobileno: "", email: "", password: "", cpassword: ""
-      })
-
-      const Companysignup = async (e) => {
-            e.preventDefault();
-            if (company.password === company.cpassword) {
-                const server = process.env.REACT_APP_SERVER;
-                  const data = await axios.post(`${server}/SignUpCompany`, {
-                        name: company.name,
-                        mobileno: company.mobileno,
-                        email: company.email,
-                        password: company.password,
-                  })
-                  // console.log(data.data);
-                  if (data.data.success) {
-                        showAlert(data.data.msg, 'success');
-                        navigate('/LoginCompany')
-                  } else {
-                        showAlert(data.data.msg, 'danger');
-                  }
-            }
-            else {
-                  alert("Password Not Matching");
-            }
-
+  const Companysignup = async (e) => {
+    e.preventDefault();
+    if (company.password === company.cpassword) {
+      try {
+        const { data } = await axios.post(`${server}/SignUpCompany`, {
+          name: company.name,
+          mobileno: company.mobileno,
+          email: company.email,
+          password: company.password,
+        });
+        if (data.success) {
+          showAlert(data.msg, 'success');
+          navigate('/LoginCompany');
+        } else {
+          showAlert(data.msg, 'danger');
+        }
+      } catch (error) {
+        showAlert('Something went wrong!', 'danger');
       }
+    } else {
+      alert("Password Not Matching");
+    }
+  };
 
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setCompany({ ...company, [name]: value });
+  };
 
-      let name, value;
-      const handleInput = (e) => {
-            name = e.target.name;
-            value = e.target.value;
-            setCompany({ ...company, [name]: value })
-            e.preventDefault();
-      }
+  return (
+    <div className="signup-container">
+      <h1>SignUp for Buyer</h1>
+      <form onSubmit={Companysignup} method="post">
+        <label>Name</label>
+        <input
+          type="text"
+          required
+          name="name"
+          value={company.name}
+          onChange={handleInput}
+        />
 
+        <label>Email</label>
+        <input
+          type="text"
+          required
+          name="email"
+          value={company.email}
+          onChange={handleInput}
+        />
 
-      return (
-            <>
-                  <div id='Xbox' className="centerS">
-                        <h1>SignUp for Buyer
-                        </h1>
-                        <form onSubmit={Companysignup} method="post">
-                              <div className="txt_field">
-                                    <input type="text" required name='name' value={company.name} onChange={handleInput} />
+        <label>Phone no.</label>
+        <input
+          type="text"
+          required
+          name="mobileno"
+          value={company.mobileno}
+          onChange={handleInput}
+        />
 
-                                    <label>Name</label>
-                              </div>
-                              <div className="txt_field">
-                                    <input type="text" required name='email' value={company.email} onChange={handleInput} />
+        <label>Password</label>
+        <input
+          type="password"
+          required
+          name="password"
+          value={company.password}
+          onChange={handleInput}
+        />
 
-                                    <label>Email</label>
-                              </div>
-                              <div className="txt_field">
-                                    <input type="text" required name='mobileno' value={company.mobileno} onChange={handleInput} />
+        <label>Confirm Password</label>
+        <input
+          type="password"
+          required
+          name="cpassword"
+          value={company.cpassword}
+          onChange={handleInput}
+        />
 
-                                    <label>Phone no.</label>
-                              </div>
-                              <div className="txt_field">
-                                    <input type="text" required name='password' value={company.password} onChange={handleInput} />
+        <input type="submit" value="Create account" className="create-account-btn" />
 
-                                    <label>Password</label>
-                              </div>
-                              <div className="txt_field">
-                                    <input type="password" required name='cpassword' value={company.cpassword} onChange={handleInput} />
+        <div className="signup-link">
+          Already have an account? <a href="/LoginCompany">Login</a>
+        </div>
+      </form>
+    </div>
+  );
+};
 
-                                    <label>Confirm Password</label>
-                              </div>
-                              <input type="submit" value="Create account" className="Create" />
-                              <div className="login_link">
-                                    already have account? <a href="LoginCompany">Login</a>
-                              </div>
-                        </form>
-                  </div>
-            </>
-      )
-}
-
-export default SignUpCompany
+export default SignUpCompany;
